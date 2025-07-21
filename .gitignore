@@ -1,14 +1,11 @@
 # Miscellaneous
 *.class
-<<<<<<< HEAD
 *.lock
 *.log
 *.pyc
 *.swp
 .buildlog/
 .history
-
-
 
 # Flutter repo-specific
 /bin/cache/
@@ -118,7 +115,6 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
-=======
 *.log
 *.pyc
 *.swp
@@ -162,4 +158,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
->>>>>>> 4849a0f (initial commit)
