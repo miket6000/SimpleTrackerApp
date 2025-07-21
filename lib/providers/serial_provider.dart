@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../logic/telemetry_tracker.dart';
 import '../services/serial_service.dart';
+import '../services/logging_service.dart';
 import '../logic/serial_handler.dart';
 import '../models/tracker_data.dart';
 import '../models/telemetry_model.dart';
@@ -9,6 +10,7 @@ import 'dart:async';
 
 class SerialProvider extends ChangeNotifier {
   final SerialService _serial = SerialService();
+  final LoggingService _logger = LoggingService();
   final SerialHandler _handler = SerialHandler();
 
   bool _isConnected = false;
@@ -24,6 +26,7 @@ class SerialProvider extends ChangeNotifier {
 
   SerialProvider() {
     _poller = SerialPoller(serial: this);
+    _logger.init();
     _serial.onDataReceived = _handleIncomingData;
     _startPortScanner();
   }
@@ -67,7 +70,9 @@ class SerialProvider extends ChangeNotifier {
     try {
       _lastCommand = command.trim();
       _serial.send(command);
-      _rawLogs.add("> $command".trim());
+      final logLine = "> $_lastCommand";
+      _rawLogs.add(logLine);
+      await _logger.append(logLine);
       notifyListeners();
     } catch (e) {
       debugPrint("SerialPortError on send(): $e");
@@ -75,8 +80,10 @@ class SerialProvider extends ChangeNotifier {
     }
   }
 
-  void _handleIncomingData(String raw) {
-    _rawLogs.add("< $raw");
+  void _handleIncomingData(String raw) async {
+    final logLine = "< $raw";
+    _rawLogs.add(logLine);
+    await _logger.append(logLine);
 
     if (_lastCommand != null) {
       final result = _handler.parse(command: _lastCommand!, response: raw);
