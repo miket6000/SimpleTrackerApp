@@ -9,6 +9,7 @@ class TelemetryTracker {
   GpsFix? _localFix;
   GpsFix? _lastRemoteFix;
   String? _remoteID;
+  double? _newAltitude;
   int _rssi = 0;
   TelemetryModel? _latest;
 
@@ -17,6 +18,7 @@ class TelemetryTracker {
   GpsFix? get localFix => _localFix;
   
   void updateRemote(RemoteResponse data) {
+    _lastRemoteFix = _remoteFix;
     _remoteFix = data.fix;
     _remoteID = data.remoteId;
     _rssi = data.rssi;
@@ -41,8 +43,6 @@ class TelemetryTracker {
       final dz = _remoteFix!.altitude ?? 0 - (_lastRemoteFix!.altitude ?? 0);
       verticalVelocity = dt > 0 ? dz / dt : 0;
     }
-
-    _lastRemoteFix = _remoteFix;
 
     final distance = distanceBetween(
       _localFix!.latitude, _localFix!.longitude,

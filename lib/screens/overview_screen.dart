@@ -39,14 +39,14 @@ class OverviewScreenState extends State<OverviewScreen> {
     final List dataTiles = [
       //DataTile(title: "Time",               value: remoteFix?.timestamp != null ? DateFormat("HH:mm:ss").format(remoteFix!.timestamp) : null),
       DataTile(title: "Time",               value: serial.telemetry?.localFix.timestamp != null ? DateFormat("HH:mm:ss").format(telemetry!.localFix.timestamp!) : null),
-      DataTile(title: "RSSI",               value: telemetry?.rssi != null ? "${telemetry?.rssi}" : null),
-      DataTile(title: "Altitude",           value: remoteFix?.altitude != null ? "${(remoteFix!.altitude! - altOffset).toStringAsFixed(1)} m" : null, onPressed: () => toggleAbsoluteAlt(remoteFix)),
+      DataTile(title: "RSSI",               value: telemetry?.rssi != null ? "${telemetry?.rssi} dBm" : null),
+      DataTile(title: "Altitude",           value: remoteFix?.altitude != null ? "${(remoteFix!.altitude! - altOffset).toStringAsFixed(0)} m" : null, onPressed: () => toggleAbsoluteAlt(remoteFix)),
       DataTile(title: "Latitude",           value: remoteFix?.latitude != null ? remoteFix!.latitude!.toStringAsFixed(4) : null),
       DataTile(title: "Longitude",          value: remoteFix?.longitude != null ? remoteFix!.longitude!.toStringAsFixed(4) : null),
-      DataTile(title: "Vertical Velocity",  value: telemetry?.verticalVelocity != null ? "${telemetry!.verticalVelocity!.toStringAsFixed(2)} m/s" : null),
+      DataTile(title: "Vertical Velocity",  value: telemetry?.verticalVelocity != null ? "${telemetry!.verticalVelocity!.toStringAsFixed(0)} m/s" : null),
       DataTile(title: "Bearing",            value: telemetry?.bearing != null ? "${telemetry!.bearing!.toStringAsFixed(0)} deg (${bearingToCompass(telemetry.bearing)})" : null),
-      DataTile(title: "Distance",           value: telemetry?.distance != null ? "${telemetry!.distance!.toStringAsFixed(2)} m" : null),
-      DataTile(title: "Elevation",          value: telemetry?.elevation != null ? "${telemetry!.elevation!.toStringAsFixed(2)} deg" : null),
+      DataTile(title: "Distance",           value: telemetry?.distance != null ? "${telemetry!.distance!.toStringAsFixed(0)} m" : null),
+      DataTile(title: "Elevation",          value: telemetry?.elevation != null ? "${telemetry!.elevation!.toStringAsFixed(0)} deg" : null),
     ];
   
     return Scaffold(

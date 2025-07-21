@@ -15,22 +15,15 @@ class SerialHandler {
     }
    
     if (command == 'R') {
-      final lines = trimmed.split('\n').map((l) => l.trim()).toList();
-
-//      if (lines.length < 2) {
-//        return UnknownResponse(raw: trimmed);
-//      }
-
-      final line1Parts = lines[0].split(" ");
+      final lineParts = trimmed.split(" ");
       
-      if (line1Parts.length != 2) {
+      if (lineParts.length != 3) {
         return UnknownResponse(raw: trimmed);
       }
 
-      final id = line1Parts[0];  
-      final fix = GpsParser.parseGga(line1Parts[1]);
-//      final rssi = int.tryParse(lines[1].split(':')[1]);
-      final rssi = 0;
+      final id = lineParts[0];
+      final fix = GpsParser.parseGga(lineParts[1]);
+      final rssi = int.tryParse(lineParts[2]);
 
       if (fix != null && rssi != null) {
         return RemoteResponse(remoteId: id, fix: fix, rssi: rssi);

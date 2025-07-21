@@ -26,7 +26,9 @@ class SerialProvider extends ChangeNotifier {
 
   SerialProvider() {
     _poller = SerialPoller(serial: this);
-    _logger.init();
+    _logger.init().then((_) {
+      notifyListeners(); // Notify UI once log file is ready
+    });
     _serial.onDataReceived = _handleIncomingData;
     _startPortScanner();
   }
@@ -39,6 +41,7 @@ class SerialProvider extends ChangeNotifier {
   Map<String, String> get settings => Map.unmodifiable(_settings);
   List<String> get availablePorts => _availablePorts;
   String? get selectedPort => _selectedPort;
+  String? get logFilePath => _logger.currentLogPath;
 
   void selectPort(String? port) {
     _selectedPort = port;

@@ -34,6 +34,7 @@ class _TerminalScreenState extends State<TerminalScreen> {
   @override
   Widget build(BuildContext context) {
     final serial = Provider.of<SerialProvider>(context);
+    final logFile = serial.logFilePath;
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -86,7 +87,8 @@ class _TerminalScreenState extends State<TerminalScreen> {
           SizedBox(height: 16),
           Expanded(
             child: SerialDisplay(logs: serial.logs), 
-          )
+          ),
+          SelectableText("See logfile at $logFile" ?? "Initializing log"),
         ],
       ),
     );
