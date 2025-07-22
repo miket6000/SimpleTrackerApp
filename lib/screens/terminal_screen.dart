@@ -88,7 +88,8 @@ class _TerminalScreenState extends State<TerminalScreen> {
           Expanded(
             child: SerialDisplay(logs: serial.logs), 
           ),
-          SelectableText("See logfile at $logFile" ?? "Initializing log"),
+          SizedBox(height: 16),
+          SelectableText((logFile != null) ? "See logfile at $logFile" : "Initializing log"),
         ],
       ),
     );

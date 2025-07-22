@@ -32,7 +32,6 @@ class SerialHandler {
       }      
     }
         
-
     if (command.startsWith("GET ")) {
       final key = command.split(" ").last;
       return SettingResponse(

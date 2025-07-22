@@ -9,7 +9,6 @@ class TelemetryTracker {
   GpsFix? _localFix;
   GpsFix? _lastRemoteFix;
   String? _remoteID;
-  double? _newAltitude;
   int _rssi = 0;
   TelemetryModel? _latest;
 

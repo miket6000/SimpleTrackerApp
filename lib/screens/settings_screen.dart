@@ -1,6 +1,7 @@
 import '../settings.dart';
 import 'package:flutter/material.dart';
-import '../configuable_setting.dart';
+import '../widgets/setting_row.dart';
+import '../channels.dart';
 
 final GlobalKey<SettingPageState> settingPageKey = GlobalKey<SettingPageState>(); 
 
@@ -11,9 +12,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class SettingPageState extends State<SettingPage> {
-  List<ConfigurableSetting> settingWidgets = [];
-  Map<String, int> initValues = {};
-
   void updateSettings() {
     setState(() {});
   }
@@ -31,18 +29,21 @@ class SettingPageState extends State<SettingPage> {
   }
 
   @override
-  void initState() {
-    for (var setting in settings.keys.where((e)=>settings[e]!.configurable)) {
-      initValues[setting] = settings[setting]!.value;
-      settingWidgets.add(ConfigurableSetting(setting: settings[setting]!));
-    }
-    super.initState();    
-  }
-
-  @override
   Widget build(BuildContext context) {
     const double widgetWidth = 400;
     bool wideScreen = MediaQuery.sizeOf(context).width > (widgetWidth * 2);
+    int? selectedChannelIndex;
+
+    final settingRows = settings.entries
+        .map((entry) => SettingRow(
+              setting: entry.value,
+              onChanged: (newVal) {
+                setState(() {
+                  if (newVal != null) entry.value.value = newVal;
+                });
+              },
+            ))
+        .toList();
 
     return 
       SingleChildScrollView(child:
@@ -56,11 +57,28 @@ class SettingPageState extends State<SettingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
              Container(
-                constraints: const BoxConstraints(maxWidth: widgetWidth, maxHeight: 400),
+                constraints: const BoxConstraints(maxWidth: widgetWidth, maxHeight: 600),
                 child: Column( 
                   children:[
                     const Text("SimpleTracker Settings"),
-                    ...settingWidgets,
+                    DropdownButton<int>(
+                      value: selectedChannelIndex,
+                      hint: const Text("Select Channel"),
+                      items: channels.map((channel) {
+                        return DropdownMenuItem<int>(
+                          value: channel.number,
+                          child: Text(channel.name),
+                        );
+                      }).toList(),
+                      onChanged: (index) {
+                        final channel = channels.firstWhere((c) => c.number == index);
+                        setState(() {
+                          selectedChannelIndex = index;
+                          applyChannelPreset(channel);
+                        });
+                      },
+                    ),                    
+                    ...settingRows,
                   ]
                 ),
               ),
