@@ -12,6 +12,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class SettingPageState extends State<SettingPage> {
+  int? selectedChannelIndex;
+
   void updateSettings() {
     setState(() {});
   }
@@ -30,10 +32,6 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    const double widgetWidth = 400;
-    bool wideScreen = MediaQuery.sizeOf(context).width > (widgetWidth * 2);
-    int? selectedChannelIndex;
-
     final settingRows = settings.entries
         .map((entry) => SettingRow(
               setting: entry.value,
@@ -46,70 +44,53 @@ class SettingPageState extends State<SettingPage> {
         .toList();
 
     return 
-      SingleChildScrollView(child:
-      Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-        children: [
-        Flex(
-          direction: wideScreen ? Axis.horizontal : Axis.vertical,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-             Container(
-                constraints: const BoxConstraints(maxWidth: widgetWidth, maxHeight: 600),
-                child: Column( 
-                  children:[
-                    const Text("SimpleTracker Settings"),
-                    DropdownButton<int>(
-                      value: selectedChannelIndex,
-                      hint: const Text("Select Channel"),
-                      items: channels.map((channel) {
-                        return DropdownMenuItem<int>(
-                          value: channel.number,
-                          child: Text(channel.name),
-                        );
-                      }).toList(),
-                      onChanged: (index) {
-                        final channel = channels.firstWhere((c) => c.number == index);
-                        setState(() {
-                          selectedChannelIndex = index;
-                          applyChannelPreset(channel);
-                        });
-                      },
-                    ),                    
-                    ...settingRows,
-                  ]
-                ),
-              ),
-          ]   
-        ),
-        Flex(
-          direction: wideScreen ? Axis.horizontal : Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children:[
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //crossAxisAlignment: CrossAxisAlignment.end,
-              children:[
-                ElevatedButton(
-                  onPressed: factoryReset, 
-                  child: const Text("Factory Reset"),
-                ),
-                const SizedBox(width:60),
-                ElevatedButton(
-                  onPressed: updateSettings, 
-                  child: const Text("Upload Settings"),
-                ),
-              ]
+      Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ListView(
+              children : [
+                DropdownButton<int>(
+                  value: selectedChannelIndex,
+                  hint: const Text("Select Channel"),
+                  items: channels.map((channel) {
+                    return DropdownMenuItem<int>(
+                      value: channel.number,
+                      child: Text(channel.name),
+                    );
+                  }).toList(),
+                  onChanged: (index) {
+                    final channel = channels.firstWhere((c) => c.number == index);
+                    setState(() {
+                      selectedChannelIndex = index;
+                      applyChannelPreset(channel);
+                    });
+                  },
+                ),                    
+        
+                ...settingRows,
+              
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+
+                    ElevatedButton (
+                      onPressed: factoryReset, 
+                      child: const Text("Factory Reset"),
+                    ),
+                          
+                    ElevatedButton(
+                      onPressed: updateSettings, 
+                      child: const Text("Upload Settings"),
+                    ),
+                  ],
+                )
+              ],
             ),
-          ],
+          ),
         ),
-        ]
-      )
-      )
     );
   }
-
 }

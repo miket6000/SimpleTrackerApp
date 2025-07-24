@@ -57,8 +57,8 @@ final Map<String, Setting> settings = {
   'f': Setting<int>(
     commandChar: 'f',
     title: 'Frequency',
-    value: 434,
-    hint: 'The center frequency in MHz, must match on both transmitter and receiver.',
+    value: 434000,
+    hint: 'The center frequency in kHz, must match on both transmitter and receiver.',
   ),
   's': Setting<int>(
     commandChar: 's',
